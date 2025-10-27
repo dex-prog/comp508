@@ -29,8 +29,13 @@ CREATE TABLE Contractor
 (
     ContractorID NUMBER(5) NOT NULL,
     ContractorName VARCHAR2(100) NOT NULL,
-    ContractorAddress VARCHAR2(200),
-    ContractorContactDetails VARCHAR2(200),
+    ContractorEmail VARCHAR2(100),
+    ContractorPhoneNo VARCHAR2(50),
+    ContractorStreetNo VARCHAR2(30),
+    ContractorStreetName VARCHAR2(100),
+    ContractorSuburb VARCHAR2(100),
+    ContractorCity VARCHAR2(100),
+    ConstractorPostalCode CHAR(4),
     CONSTRAINT contractor_contractorID_pk PRIMARY KEY(ContractorID)
 );
 
@@ -42,12 +47,31 @@ CREATE TABLE Role
     CONSTRAINT role_roleID_pk PRIMARY KEY(RoleID)
 );
 
+CREATE TABLE Employee
+(
+    EmployeeID NUMBER(5) NOT NULL,
+    EmployeeFirstName VARCHAR2(100),
+    EmployeeLastName VARCHAR2(100),
+    EmployeeDateOfBirth DATE,
+    Gender CHAR(10),
+    EmployeeContactPhoneNo VARCHAR2(50),
+    EmployeeEmail VARCHAR2(100),
+    EmployeeStreetNo VARCHAR2(30),
+    EmployeeStreetName VARCHAR2(100),
+    EmployeeSuburb VARCHAR2(100),
+    EmployeeCity VARCHAR2(100),
+    EmployeePostalCode CHAR(4),
+    StartDateOfEmployment DATE,
+    CONSTRAINT employee_employeeID_pk PRIMARY KEY(EmployeeID)
+);
+
 CREATE TABLE Road
 (
     RoadID NUMBER(5) NOT NULL,
     RoadName VARCHAR2(100) NOT NULL,
     RoadDescription VARCHAR2(200),
-    RoadLength NUMBER(5, 2),
+    RoadLength NUMBER(10, 2),
+    RoadLengthUnit CHAR(5),
     ParentRoadID NUMBER(5),
     CategoryID NUMBER(2) NOT NULL,
     StartLocationID NUMBER(5) NOT NULL,
@@ -91,41 +115,21 @@ CREATE TABLE Contract
 
 
 
-CREATE TABLE Employee
-(
-    EmployeeID NUMBER(5) NOT NULL,
-    EmployeeFirstName VARCHAR2(100),
-    EmployeeLastName VARCHAR2(100),
-    EmployeeDateOfBirth DATE,
-    Gender CHAR(10),
-    EmployeePostalAddress VARCHAR2(200),
-    EmployeeContactPhoneNo VARCHAR2(50),
-    EmployeeEmail VARCHAR2(100),
-    StartDateOfEmployment DATE,
-    CONSTRAINT employee_employeeID_pk PRIMARY KEY(EmployeeID)
-);
+
 
 CREATE TABLE Employee_Role
 (
+    EmployeeRoleID NUMBER(10) NOT NULL,
     RoleID NUMBER(3) NOT NULL,
     EmployeeID NUMBER(5) NOT NULL,
     RoleStartDate DATE NOT NULL,
     RoleEndDate DATE,
     ProjectCode CHAR(5) NOT NULL,
+    ContractNo CHAR(6),
     ChangeReason VARCHAR2(200),
-    CONSTRAINT employee_role_pk PRIMARY KEY(RoleID, EmployeeID, RoleStartDate),
+    CONSTRAINT employee_role_pk PRIMARY KEY(EmployeeRoleID),
     CONSTRAINT employee_role_roleID_fk FOREIGN KEY(RoleID) REFERENCES Role(RoleID),
     CONSTRAINT employee_role_employeeID_fk FOREIGN KEY(EmployeeID) REFERENCES Employee(EmployeeID),
-    CONSTRAINT employee_role_projectcode_fk FOREIGN KEY(ProjectCode) REFERENCES Project(ProjectCode)
-);
-
-CREATE TABLE Contract_Manager
-(
-    ContractNo CHAR(6) NOT NULL,
-    ContractManagerID NUMBER(5) NOT NULL,
-    ContractManagerStartDate DATE NOT NULL,
-    ContractManagerEndDate DATE,
-    CONSTRAINT contract_manager_pk PRIMARY KEY(ContractNo, ContractManagerID, ContractManagerStartDate),
-    CONSTRAINT contract_manager_contractmanagerID_fk FOREIGN KEY(ContractManagerID) REFERENCES Employee(EmployeeID),
-    CONSTRAINT contract_manager_contractno_fk FOREIGN KEY(ContractNo) REFERENCES Contract(ContractNo)
+    CONSTRAINT employee_role_projectcode_fk FOREIGN KEY(ProjectCode) REFERENCES Project(ProjectCode),
+    CONSTRAINT employee_role_contractno_fk FOREIGN KEY(ContractNo) REFERENCES Contract(ContractNo)
 );
